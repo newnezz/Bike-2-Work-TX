@@ -5,18 +5,57 @@
 }
 
 :root {
+  --hero-top: #e8f3ef;
   --bg: #f4f7fb;
   --surface: #ffffff;
   --text: #1a2332;
   --muted: #5c6b7a;
   --accent: #0d7a5f;
   --accent-dark: #065a46;
+  --accent-soft: #eef8f4;
+  --accent-soft-border: #cce8de;
   --warn: #b45309;
   --danger: #b91c1c;
   --ok: #15803d;
   --border: #d8e0ea;
   --shadow: 0 8px 24px rgba(26, 35, 50, 0.08);
   --radius: 12px;
+  --input-bg: #ffffff;
+  --bubble-bg: #ffffff;
+  --bubble-hover-bg: #f0faf6;
+  --bubble-hover-border: #9fd4c4;
+  --tips-bg: #f8fafc;
+  --badge-ok-bg: #dcfce7;
+  --badge-warn-bg: #fef3c7;
+  --badge-no-bg: #fee2e2;
+  --action-bg: #ffffff;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --hero-top: #0a1612;
+  --bg: #0f1419;
+  --surface: #1a2332;
+  --text: #e8edf2;
+  --muted: #94a3b8;
+  --accent: #34d399;
+  --accent-dark: #10b981;
+  --accent-soft: #1e3a32;
+  --accent-soft-border: #2d5a4a;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --ok: #4ade80;
+  --border: #2d3a4d;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --input-bg: #243044;
+  --bubble-bg: #243044;
+  --bubble-hover-bg: #2a3d52;
+  --bubble-hover-border: #3d5a6e;
+  --tips-bg: #243044;
+  --badge-ok-bg: #14532d;
+  --badge-warn-bg: #78350f;
+  --badge-no-bg: #7f1d1d;
+  --action-bg: #243044;
 }
 
 html {
@@ -27,10 +66,11 @@ body {
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #e8f3ef 0%, var(--bg) 220px);
+  background: linear-gradient(180deg, var(--hero-top) 0%, var(--bg) 220px);
   line-height: 1.5;
   overflow-x: hidden;
   max-width: 100%;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 a {
@@ -44,6 +84,42 @@ a {
 .header-inner {
   max-width: 1100px;
   margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-text {
+  min-width: 0;
+}
+
+.theme-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.theme-toggle-icon {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .header h1 {
@@ -69,6 +145,7 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .search-panel {
@@ -100,6 +177,8 @@ a {
   border: 1px solid var(--border);
   border-radius: 8px;
   font: inherit;
+  background: var(--input-bg);
+  color: var(--text);
 }
 
 .distance-field {
@@ -125,7 +204,7 @@ a {
   padding: 0.55rem 1rem;
   border: 2px solid var(--border);
   border-radius: 999px;
-  background: #fff;
+  background: var(--bubble-bg);
   color: var(--text);
   font: inherit;
   font-weight: 600;
@@ -135,8 +214,8 @@ a {
 }
 
 .distance-bubble:hover {
-  border-color: #9fd4c4;
-  background: #f0faf6;
+  border-color: var(--bubble-hover-border);
+  background: var(--bubble-hover-bg);
 }
 
 .distance-bubble.is-selected {
@@ -286,8 +365,8 @@ a {
 
 .place-item:hover,
 .place-item.active {
-  background: #eef8f4;
-  border-color: #cce8de;
+  background: var(--accent-soft);
+  border-color: var(--accent-soft-border);
 }
 
 .place-item:last-child {
@@ -318,17 +397,17 @@ a {
 }
 
 .badge.ok {
-  background: #dcfce7;
+  background: var(--badge-ok-bg);
   color: var(--ok);
 }
 
 .badge.warn {
-  background: #fef3c7;
+  background: var(--badge-warn-bg);
   color: var(--warn);
 }
 
 .badge.no {
-  background: #fee2e2;
+  background: var(--badge-no-bg);
   color: var(--danger);
 }
 
@@ -404,7 +483,7 @@ a {
   font-weight: 600;
   font-size: 0.9rem;
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--action-bg);
   color: var(--text);
   cursor: pointer;
 }
@@ -418,7 +497,7 @@ a {
 .tips-box {
   margin-top: 1rem;
   padding: 0.85rem;
-  background: #f8fafc;
+  background: var(--tips-bg);
   border-radius: 8px;
   border-left: 4px solid var(--accent);
   font-size: 0.92rem;

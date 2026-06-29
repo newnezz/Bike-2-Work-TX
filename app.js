@@ -7,6 +7,7 @@
   const CACHE_STORAGE_KEY = 'b2w_search_cache';
   const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
   const CACHE_MAX_ENTRIES = 10;
+  const THEME_STORAGE_KEY = 'b2w_theme';
   const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
   const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
   const APP_EMAIL = 'bike-to-work@example.com';
@@ -66,8 +67,10 @@
   const cooldownMsg = document.getElementById('cooldown-msg');
   const distanceInput = document.getElementById('distance');
   const distanceBubbles = document.querySelectorAll('.distance-bubble');
+  const themeToggle = document.getElementById('theme-toggle');
 
   let map = null;
+  let mapTileLayer = null;
   let homeMarker = null;
   let radiusCircle = null;
   let placeMarkers = [];
@@ -86,7 +89,58 @@
   distanceBubbles.forEach((bubble) => {
     bubble.addEventListener('click', () => selectDistance(bubble));
   });
+  initTheme();
   initCooldown();
+
+  const MAP_TILES = {
+    light: {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap contributors',
+    },
+    dark: {
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    },
+  };
+
+  function isDarkTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+
+  function updateThemeToggleUI() {
+    const dark = isDarkTheme();
+    themeToggle.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeToggle.querySelector('.theme-toggle-icon').textContent = dark ? '☀️' : '🌙';
+    themeToggle.querySelector('.theme-toggle-label').textContent = dark ? 'Light' : 'Dark';
+  }
+
+  function setMapTiles() {
+    if (!map) return;
+    const config = MAP_TILES[isDarkTheme() ? 'dark' : 'light'];
+    if (mapTileLayer) mapTileLayer.remove();
+    mapTileLayer = L.tileLayer(config.url, {
+      maxZoom: 19,
+      attribution: config.attribution,
+    }).addTo(map);
+  }
+
+  function setTheme(dark) {
+    if (dark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem(THEME_STORAGE_KEY, 'light');
+    }
+    updateThemeToggleUI();
+    setMapTiles();
+  }
+
+  function initTheme() {
+    updateThemeToggleUI();
+    themeToggle.addEventListener('click', () => setTheme(!isDarkTheme()));
+  }
 
   function setStatus(message, type) {
     statusEl.textContent = message;
@@ -517,10 +571,7 @@ out center tags;`,
   function ensureMap(center, radiusMeters) {
     if (!map) {
       map = L.map('map').setView([center.lat, center.lon], 14);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors',
-      }).addTo(map);
+      setMapTiles();
     } else {
       map.setView([center.lat, center.lon], 14);
     }
@@ -536,8 +587,8 @@ out center tags;`,
 
     radiusCircle = L.circle([center.lat, center.lon], {
       radius: radiusMeters,
-      color: '#0d7a5f',
-      fillColor: '#0d7a5f',
+      color: isDarkTheme() ? '#34d399' : '#0d7a5f',
+      fillColor: isDarkTheme() ? '#34d399' : '#0d7a5f',
       fillOpacity: 0.08,
       weight: 2,
     }).addTo(map);
