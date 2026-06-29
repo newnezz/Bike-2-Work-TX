@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bike to Work — Texas Teen Job Finder</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <h1>Bike to Work</h1>
+      <p class="tagline">Find nearby employers you can bike to — built for Texas teens</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="search-panel card">
+      <h2>Your search</h2>
+      <form id="search-form" class="search-form">
+        <label>
+          Home address (Texas)
+          <input type="text" id="address" name="address" required
+                 placeholder="123 Main St, Austin, TX 78701"
+                 autocomplete="street-address">
+        </label>
+
+        <label>
+          Your age
+          <input type="number" id="age" name="age" min="14" max="99" value="15" required>
+        </label>
+
+        <fieldset class="distance-field">
+          <legend>Max bike distance</legend>
+          <div class="distance-bubbles" role="radiogroup" aria-label="Max bike distance">
+            <button type="button" class="distance-bubble" data-miles="0.5" aria-pressed="false">0.5 mi</button>
+            <button type="button" class="distance-bubble is-selected" data-miles="1" aria-pressed="true">1 mi</button>
+            <button type="button" class="distance-bubble" data-miles="1.5" aria-pressed="false">1.5 mi</button>
+            <button type="button" class="distance-bubble" data-miles="2" aria-pressed="false">2 mi</button>
+          </div>
+          <input type="hidden" id="distance" name="distance" value="1">
+        </fieldset>
+
+        <button type="submit" id="search-btn">Find bikeable jobs nearby</button>
+        <p id="cooldown-msg" class="cooldown-msg hidden" aria-live="polite"></p>
+      </form>
+
+      <details class="legal-note">
+        <summary>Texas rules for 15-year-olds (quick guide)</summary>
+        <ul>
+          <li><strong>Minimum age:</strong> 14 for most non-farm jobs. Under 14 is very limited.</li>
+          <li><strong>Work permit:</strong> Texas requires an <em>Application for Child Actor/Performing Artist or Exemption Certificate</em> (commonly called a work permit) from the Texas Workforce Commission for minors under 18 in many cases. Ask the school or employer how to get one before starting.</li>
+          <li><strong>Hours (school in session):</strong> No work during school hours. Max 3 hrs/day, 18 hrs/week on school days. Work only 7 a.m.–7 p.m. (until 9 p.m. June 1–Labor Day).</li>
+          <li><strong>Common OK jobs:</strong> Grocery/retail (cashier, stocking, bagging), fast food with limited cooking duties, movie theaters, bowling alleys, office/clerical work.</li>
+          <li><strong>Usually NOT OK:</strong> Construction, warehouse, manufacturing, driving, operating power slicers/grinders, freezers/meat coolers, most hazardous work.</li>
+          <li><strong>This app</strong> filters by business type — always confirm with the employer. Laws: <a href="https://www.twc.texas.gov/programs/unemployment-claims-and-benefits/child-labor-laws" target="_blank" rel="noopener">TWC Child Labor</a> · <a href="https://www.dol.gov/agencies/whd/fact-sheets/43-child-labor-non-agriculture" target="_blank" rel="noopener">Federal FLSA</a></li>
+        </ul>
+      </details>
+    </section>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+
+    <section id="results" class="results hidden">
+      <div class="results-header">
+        <h2 id="results-title">Nearby employers</h2>
+        <p id="results-meta" class="results-meta"></p>
+      </div>
+
+      <div class="results-layout">
+        <aside class="list-panel card">
+          <div class="list-controls">
+            <label>
+              Sort by
+              <select id="sort-select">
+                <option value="distance">Distance</option>
+                <option value="name">Name</option>
+              </select>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="eligible-only" checked>
+              Likely hires my age only
+            </label>
+          </div>
+          <ul id="place-list" class="place-list"></ul>
+        </aside>
+
+        <div class="map-panel card">
+          <div id="map"></div>
+        </div>
+      </div>
+
+      <aside id="detail-panel" class="detail-panel card hidden" aria-live="polite">
+        <button type="button" id="detail-close" class="detail-close" aria-label="Close details">&times;</button>
+        <div id="detail-content"></div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors. Not legal advice — verify age rules and hiring with each employer.</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

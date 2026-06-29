@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "functions": {
+    "api/places.js": {
+      "maxDuration": 30
+    }
+  }
+}
